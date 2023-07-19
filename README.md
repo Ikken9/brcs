@@ -14,3 +14,7 @@ python ./brcs.py <parameters...>
 
 
 <br>You can move this file to the PATH to execute from everywhere.
+
+### Screenshot
+
+![screenshot](screenshot.png)
