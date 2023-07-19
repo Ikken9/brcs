@@ -4,9 +4,8 @@
 # Cheat sheet author: Peter Krumins
 
 from tabulate import tabulate
-from colorama import init, Fore, Style
 import argparse
-import re
+
 
 CHEAT_SHEET = [['cmd > file', 'Redirect the standard output (stdout) of cmd to a file.'],
                ['cmd 1> file', 'Same as cmd > file. 1 is the default file descriptor (fd) for stdout.'],
@@ -96,22 +95,12 @@ def argument_parser():
     return parser.parse_known_args()
 
 
-def highlight_search_words(text, search_words):
-    highlighted_text = text
-    for word in search_words:
-        highlighted_text = re.sub(fr'\b({word})\b',
-                                  f'{Fore.RED}\\1{Style.RESET_ALL}',
-                                  highlighted_text,
-                                  flags=re.IGNORECASE)
-    return highlighted_text
-
-
 def intersection_search(search_words, cheat_sheet):
     matching_words = []
     for redirection, description in cheat_sheet:
-        highlighted_rdr = highlight_search_words(redirection, search_words)
-        highlighted_desc = highlight_search_words(description, search_words)
-        if all(keyword.lower() in highlighted_rdr.lower() or keyword.lower() in highlighted_desc.lower() for keyword in
+        rdr = description.lower()
+        desc = description.lower()
+        if all(keyword.lower() in rdr or keyword.lower() in desc for keyword in
                search_words):
             matching_words.append([redirection, description])
     return matching_words
@@ -120,9 +109,9 @@ def intersection_search(search_words, cheat_sheet):
 def join_search(search_words, cheat_sheet):
     matching_commands = []
     for redirection, description in cheat_sheet:
-        highlighted_rdr = highlight_search_words(redirection, search_words)
-        highlighted_desc = highlight_search_words(description, search_words)
-        if any(word.lower() in highlighted_rdr.lower() or word.lower() in highlighted_desc.lower() for word in
+        rdr = redirection.lower()
+        desc = description.lower()
+        if any(word.lower() in rdr or word.lower() in desc for word in
                search_words):
             matching_commands.append([redirection, description])
     return matching_commands
@@ -131,7 +120,6 @@ def join_search(search_words, cheat_sheet):
 def main():
     cheat_sheet = CHEAT_SHEET
     args = argument_parser()[0]
-    print(args)
     if args.isearch:
         cheat_sheet = intersection_search(args.isearch, CHEAT_SHEET)
     elif args.jsearch:
