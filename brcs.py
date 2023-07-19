@@ -1,4 +1,4 @@
-# !/bin/python3
+#!/usr/bin/python3
 
 # Author: Ikken9
 # Cheat sheet author: Peter Krumins
